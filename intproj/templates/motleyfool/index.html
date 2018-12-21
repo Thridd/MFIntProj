@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>html</title>
+
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+        {% load static %}
+        <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+        <script type="text/javascript">
+            //var jsonString =  {{content_data}};
+
+            //widget.init(data_from_django);
+        </script>
+    </head>
+    <body>
+        <div class="container content-inner">
+            {% for singleArticle in content_data.results %}
+             {% if forloop.first %}
+            <div class="main-col">
+                <section class="jumbo-card card">
+                    <div class="card-image">
+                        <a href="{{singleArticle.links.presentation}}">
+                        {% for articleImage in singleArticle.images %}
+                            <img src="{{articleImage.url}}" alt="">
+                        {% endfor %}
+                        </a>
+                    </div>
+                    <div class="card-elements">
+                        <div class="card-header">
+                            <a href="article/?q={{forloop.counter}}"><h3>{{ singleArticle.headline | safe }}</h3></a>
+                            <p class="author">
+                                {% for singleAuthor in singleArticle.authors %}
+                                {{ singleAuthor.byline }}
+                                <br>
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <div class="card-copy">
+                             <p>{{ singleArticle.promo | safe }}</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="cards row">
+            {% else %}
+                {% if forloop.counter < 5 %}
+                <div class="card">
+                    <div class="card-image">
+                        <a href="{{singleArticle.links.presentation}}">
+                            {% for articleImage in singleArticle.images %}
+                            <img src="{{articleImage.url}}" alt="">
+                            {% endfor %}
+                        </a>
+                    </div>
+                    <div class="card-elements">
+                        <div class="card-header">
+                            <a href="{{singleArticle.links.presentation}}">
+                                <h4>{{ singleArticle.headline | safe }}</h4>
+                            </a>
+                            <p class="author">
+                                {% for singleAuthor in singleArticle.authors %}
+                                {{ singleAuthor.byline }}
+                                <br>
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <div class="card-copy">
+                            <p>{{ singleArticle.promo | safe }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% if forloop.last %}
+            </div>
+            {% endif %}
+
+            {% endif %}
+            {% endfor %}
+        </div>
+    <script src="{% static '/js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static '/js/bootstrap.min.js' %}"></script>
+        <script src="{% static '/js/main.js' %}"></script>
+    </body>
+</html>

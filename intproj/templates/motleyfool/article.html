@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>html</title>
+
+        <!-- Bootstrap -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+        {% load static %}
+        <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    </head>
+    <body>
+
+        <div class="container top-bar article-top-bar">
+            <a href="/motleyfool" class="btn btn-primary">HOME</a>
+        </div>
+        <div class="container article-content-inner">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="article-header">
+                        <header>
+                            <div id="adv_text" class="adv-heading"></div>
+                            <h1>{{content_data.promo}}</h1>
+                        </header>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <main class="col-sm-7 col-md-8">
+                    <div class="author-tagline author-inline">
+                        <div class="author-and-date">
+                            <div class="author-byline">
+                                <div class="author-name">
+                                    {% for author in content_data.authors %}
+                                        {{author.byline}}
+                                        <br>
+                                    {% endfor %}
+                                </div>
+                                <div class="author-username">
+                                    {% for author in content_data.authors %}
+                                        {{author.username}}
+                                        <br>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="article-pub-date">
+                                <div class="publication-date">
+                                    {{content_data.created}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <section class="article-body">
+                        <div class="article-content">
+                            {{content_data.body | safe}}
+                            {{content_data.pitch.text | safe}}
+                        </div>
+                        <div class="article-disclosure">
+                            {{content_data.disclosure | safe}}
+
+                        </div>
+                        <div class="special-message">
+                            <p><strong>This Stock Could be like Buying Netflix for $1.87<br></strong></p>
+                            <p>We think the second-wave of the cord-cutting revolution is just beginning. And if you missed your chance to get in on Netflix early...then you are going to want to see this.</p>
+                            <p>Because Motley Fool Co-Founder, David Gardner, has been following the cord-cutting revolution for years. David first recommended that members of Motley Fool Stock Advisor buy Netflix in 2004.</p>
+                            <p>And Netflix stock rode the first wave of the cord-cutting revolution to massive gains. Investors who bought Netflix on the date when David first recommended it turned every $1,000 invested into nearly $145,050!</p>
+                            <p>And that's why some savvy investors are sprinting to take advantage today. Because cord-cutting may finally be going mainstream.</p>
+                            <p>And our experts think it's setting up an incredible opportunity for one tiny American company.</p>
+                            <p><a class="btn" href="#">Learn more</a></p>
+                        </div>
+                    </section>
+                </main>
+                <aside class="col-sm-5 col-md-4 p-l">
+                    <section class="related-tickers">
+                        <div class="block-title">
+                            <hr><h2>Stocks</h2>
+                        </div>
+                        <div class="ticker-row">
+                            <div>
+                                <span class="image-wrap">
+                                    <a href="#">
+                                        <img src="{% static 'images/related-1.png' %}" class="img-responsive" alt="">
+                                    </a>
+                                </span>
+                                <h3>{{quotes_data.CompanyName}}</h3>
+                                <h4>
+                                    <span class="ticker">
+                                        <a title="Stock Quote" href="#">
+                                            NASDAQ:<span class="symbol">{{quotes_data.Symbol}}</span>
+                                        </a>
+                                    </span>
+                                </h4>
+                                <aside class="price-quote-container">
+                                    <h4 class="current-price">
+                                        ${{quotes_data.CurrentPrice.Amount}}
+                                    </h4>
+                                    {% if quotes_data.Change.Amount < 0 %}
+                                        <h4 class="price-change-amount price-neg">
+                                            ${{quotes_data.Change.Amount}}
+                                        </h4>
+                                        <h4 class="price-change-percent price-neg">
+                                            ({{quotes_data.PercentChange.Value |floatformat:"2"}}%)
+                                        </h4>
+                                    {% else %}
+                                        <h4 class="price-change-amount price-pos">
+                                            ${{quotes_data.Change.Amount}}
+                                        </h4>
+                                        <h4 class="price-change-percent price-pos">
+                                            {{quotes_data.PercentChange.Value |floatformat:"2"}}%
+                                        </h4>
+                                    {% endif %}
+                                </aside>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="read-more-section">
+                        <div class="block-title">
+                            <hr><h2>Read More</h2>
+                        </div>
+                        <ul class="two-line-list">
+                            <li><a href="#">It is a long established fact that a reader</a></li>
+                            <li><a href="#">Many desktop publishing packages and web page editors now use</a></li>
+                            <li><a href="#">Contrary to popular belief, Lorem Ipsum is not simply random text</a></li>
+                            <li><a href="#">There are many variations of passa</a></li>
+                            <li><a href="#" >If you are going to use a passage of Lorem Ipsum</a></li>
+                        </ul>
+                    </section>
+                </aside>
+            </div>
+            <div class="comments">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="articleID" id="articleID" value="{{content_data.uuid}}">
+                    <label for="comment">Add New Comment</label>
+                    <br>
+                    <input type="text" name="comment" id="new-comment">
+                    <input type="submit" name="submit">
+                </form>
+                {% if comments.count > 0 %}
+                <hr>
+                <div class ="comment-body">
+                    {% for singleComment in comments %}
+                        <div class="comment-box">
+                            <div class="row">
+                                <span class = "comment-date col-md-12" >
+                                    <b>{{ singleComment.date_posted | date:'SHORT_DATE_FORMAT'}} {{ singleComment.date_posted | time:'TIME_FORMAT' }}</b>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span class="comment-text col-md-11">
+                                    {{ singleComment.text }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <script src="{% static '/js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static '/js/bootstrap.min.js' %}"></script>
+        <script src="{% static '/js/main.js' %}"></script>
+    </body>
+</html>
